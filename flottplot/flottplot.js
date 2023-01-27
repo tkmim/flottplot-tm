@@ -9,7 +9,7 @@ window.onerror = function (msg) {
     document.body.style.margin = "10px";
 }
 
-
+var debug = 0
 let $ = {
 
     nodeify: function (item) {
@@ -185,7 +185,7 @@ class FlottPlot {
                 let element = (typeof callback.element === "string")
                             ? this.elements.get(callback.element)
                             : callback.element;
-                element[callback.action]();
+                element[callback.action](callback.attr);
                 e.preventDefault();
             }
         });
@@ -357,16 +357,17 @@ class FlottPlot {
 
 
 
-function bind(key, element, action) {
-    return new Keybinding(key, element, action);
+function bind(key, element, action, attr = null) {
+    return new Keybinding(key, element, action, attr);
 }
 
 class Keybinding {
 
-    constructor(key, element, action) {
+    constructor(key, element, action, attr = null) {
         this.key = key;
         this.element = element;
         this.action = action;
+        this.attr = attr;
     }
 
 }
@@ -618,13 +619,20 @@ class Range {
     static format(value, format, errobj) {
         // Default formatting is just the JavaScript formatting
         if (format == null) return value.toString();
+
+        if (debug == 1) {
+            console.log(format);
+            console.log(format.match(/^([+-])?(%)([0-9]+)(d)$/));
+        }
+
+        // if format is specified; with a sign and two digits up to 99, e.g. %1d (1), +%2d (+02), -%03d (=005)
         // Zero-padded (left) format
-        let match = format.match(/^(\+)?(0>[0-9]+)?$/);
+        let match = format.match(/^([+-])?(%)([0-9]+)(d)$/);
         if (match == null) _throwWithContext(
-            errobj, "requested number format '" + format + "' not possible"
+            errobj, "requested number format '" + format + "' not possible. use one sign and two digits like +3 or -10"
         );
         let sign = (value < 0 || match[1] === "+") ? (value < 0 ? "-" : "+") : "";
-        let width = (match[2] != null) ? +match[2].slice(2) : 0;
+        let width = (match[3] != null) ? +Number(match[3]) : 0;
         return sign + Math.abs(value).toString().padStart(width, "0");
     }
 
@@ -708,12 +716,12 @@ class Calendar {
         }
         this.date = Calendar.parse(init, this);
         // Buttons for navigating year, month, day and hours
-        let yyPrev = $.button("-Y", () => this.prevYear());
-        let yyNext = $.button("+Y", () => this.nextYear());
-        let mmPrev = $.button("-M", () => this.prevMonth());
-        let mmNext = $.button("+M", () => this.nextMonth());
-        let ddPrev = $.button("-D", () => this.prevDay());
-        let ddNext = $.button("+D", () => this.nextDay());
+        let yyPrev = $.button("-Y", () => this.prevYear(1));
+        let yyNext = $.button("+Y", () => this.nextYear(1));
+        let mmPrev = $.button("-M", () => this.prevMonth(1));
+        let mmNext = $.button("+M", () => this.nextMonth(1));
+        let ddPrev = $.button("-D", () => this.prevDay(1));
+        let ddNext = $.button("+D", () => this.nextDay(1));
         let hhPrev = $.button("-H", () => this.prevHour());
         let hhNext = $.button("+H", () => this.nextHour());
         // Textbox which shows the current day and can be edited
@@ -727,11 +735,16 @@ class Calendar {
                 this.text.style.color = "red";
             }
         });
+        var condition = null
+        if (condition == null){
+        this.node = $.create("div", { "class": "calendar" }, [
+            $.button("-10D", () => this.prevDay(10)), ddPrev, this.text, ddNext, $.button("+10D", () => this.nextDay(10))
+        ]);} else {
         this.node = $.create("div", { "class": "calendar" }, [
             yyPrev, mmPrev, ddPrev, (hourstep === 24 ? null : hhPrev),
             this.text,
             (hourstep === 24 ? null : hhNext), ddNext, mmNext, yyNext
-        ]);
+        ]);}
     }
 
     getValue(format, offset) {
@@ -749,33 +762,33 @@ class Calendar {
         this.notify();
     }
 
-    prevYear() {
-        this.date.setUTCFullYear(this.date.getUTCFullYear() - 1);
+    prevYear(value) {
+        this.date.setUTCFullYear(this.date.getUTCFullYear() - value);
         this.setValue(this.date);
     }
 
-    nextYear() {
-        this.date.setUTCFullYear(this.date.getUTCFullYear() + 1);
+    nextYear(value) {
+        this.date.setUTCFullYear(this.date.getUTCFullYear() + value);
         this.setValue(this.date);
     }
 
-    prevMonth() {
-        this.date.setUTCMonth(this.date.getUTCMonth() - 1);
+    prevMonth(value) {
+        this.date.setUTCMonth(this.date.getUTCMonth() - value);
         this.setValue(this.date);
     }
 
-    nextMonth() {
-        this.date.setUTCMonth(this.date.getUTCMonth() + 1);
+    nextMonth(value) {
+        this.date.setUTCMonth(this.date.getUTCMonth() + value);
         this.setValue(this.date);
     }
 
-    prevDay() {
-        this.date.setUTCDate(this.date.getUTCDate() - 1);
+    prevDay(value) {
+        this.date.setUTCDate(this.date.getUTCDate() - value);
         this.setValue(this.date);
     }
 
-    nextDay() {
-        this.date.setUTCDate(this.date.getUTCDate() + 1);
+    nextDay(value) {
+        this.date.setUTCDate(this.date.getUTCDate() + value);
         this.setValue(this.date);
     }
 
@@ -889,7 +902,7 @@ class Forecast {
     }
 
     updateDisplay() {
-        this.leadNode.innerHTML = Range.format(this.lead, "+", this)
+        this.leadNode.innerHTML = Range.format(this.lead, "+%2d", this)
         this.validNode.innerHTML = Calendar.format(this.valid, null, null, this);
         this.notify();
     }
