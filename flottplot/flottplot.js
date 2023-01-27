@@ -629,7 +629,7 @@ class Range {
         // Zero-padded (left) format
         let match = format.match(/^([+-])?(%)([0-9]+)(d)$/);
         if (match == null) _throwWithContext(
-            errobj, "requested number format '" + format + "' not possible. use one sign and two digits like +3 or -10"
+            errobj, "requested number format '" + format + "' not possible. use the C-string format like %03d or -%10d"
         );
         let sign = (value < 0 || match[1] === "+") ? (value < 0 ? "-" : "+") : "";
         let width = (match[3] != null) ? +Number(match[3]) : 0;
