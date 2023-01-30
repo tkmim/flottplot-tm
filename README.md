@@ -154,3 +154,6 @@ The server can be stopped with `Ctrl-C` when you are done.
 
 A license will be added once a first release is declared.
 
+## Aknowledgement
+
+This work is initially based on Chpolste's 'flottplot' project and tkmim modified the software for his personal usage. The licence of the software follows that of the original flottplot software as soon as a licence is assigned. 
