@@ -48,6 +48,10 @@ div.cursor.hline {
 div.cursor.vline {
     width: 0px;
 }
+div.cursor.cross {
+    height: 0px;
+    width: 0px;
+}
 
 /* Keybindings table */
 div.fullview table.keys {

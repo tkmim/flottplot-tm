@@ -12,15 +12,16 @@
 flottplot(
     heading("An Example UI"), // Title
     selector("Var", { "ANA": "ANA", }),
-    hspace(),
+    hspace("10px"), // px, em, pt availables
     cal=calendar("Date", "2021-06-01 00Z", 3, false), // name, init, hourstep, daily
     //ft=forecast("ft", "Date", 1), // name, init (name of calender), step
     columns(
         column(
-		plot("./figs/ANA/{Date:yyyymmdd}/ICON-D2_{Var}_{Date:yyyymmddhh}.png")
+        // path, cursorGroup (name:[vline, hline, cross])
+		plot("./figs/ANA/{Date:yyyymmdd}/ICON-D2_{Var}_{Date:yyyymmddhh}.png", "eins:cross"),
         ),
         column(
-        plot("./figs/ANA/{Date:yyyymmdd:+3h}/ICON-D2_{Var}_{Date:yyyymmddhh:+3h}.png"),
+        plot("./figs/ANA/{Date:yyyymmdd:+3h}/ICON-D2_{Var}_{Date:yyyymmddhh:+3h}.png", "eins:cross"),
         //plot("./figs/ANA/{Date:yyyymmdd}/ICON-D2_{Var}_{ft:lead:+%02d}_{Date:yyyymmddhh:+3h}.png")
         ),
     ),

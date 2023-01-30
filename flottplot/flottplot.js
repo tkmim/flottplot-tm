@@ -296,16 +296,23 @@ class FlottPlot {
         let group = this._cursorGroups.get(cgName);
         let isHLine = cgName.endsWith(":hline");
         let isVLine = cgName.endsWith(":vline");
+        let isCross = cgName.endsWith(":cross");
         // When the mouse enters an element, add additional cursors
         if (event.type === "mouseover") {
             // Create one cursor less than elements in the group (no need to
             // put one where the mouse already is) unless the user wants
             // a horizontal/vertical line
-            let cls = "cursor" + (isHLine ? " hline" : "") + (isVLine ? " vline" : "");
-            for (let i = 0; i < group.length - ((isHLine || isVLine) ? 0 : 1); ++i) {
+            let cls = "cursor" + (isHLine ? " hline" : "") + (isVLine ? " vline" : "") + (isCross ? " cross" : "");
+            for (let i = 0; i < group.length - ((isHLine || isVLine || isCross ) ? 0 : 1); ++i) {
                 let cursor = $.create("div", { "class": cls });
                 document.body.appendChild(cursor);
                 this._cursors.push(cursor);
+
+                let cursor2 = $.create("div", { "class": cls });
+                if (isCross) {
+                    document.body.appendChild(cursor2);
+                    this._cursors.push(cursor2);
+                }
             }
         }
         // Update location of cursors
@@ -321,6 +328,13 @@ class FlottPlot {
                 this._cursors[i].style.left = (node.x + xfrac * node.width) + "px";
                 this._cursors[i].style.top = node.y + "px";
                 this._cursors[i].style.height = node.height + "px";
+            } else if (isCross) {
+                this._cursors[i*2].style.left = (node.x + xfrac * node.width) + "px";
+                this._cursors[i*2].style.top = node.y + "px";
+                this._cursors[i*2].style.height = node.height + "px";
+                this._cursors[i*2+1].style.left = node.x + "px";
+                this._cursors[i*2+1].style.width = node.width + "px";
+                this._cursors[i*2+1].style.top = (node.y + yfrac * node.height) + "px";
             } else if (node === event.target) {
                 continue;
             } else {
