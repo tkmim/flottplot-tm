@@ -700,13 +700,13 @@ class Checkboxes {
 
 
 
-function calendar(name, init, hourstep) {
-    return new Calendar(name, init, hourstep);
+function calendar(name, init, hourstep, daily=false) {
+    return new Calendar(name, init, hourstep, daily);
 }
 
 class Calendar {
 
-    constructor(name, init, hourstep) {
+    constructor(name, init, hourstep, daily) {
         _setName(this, name);
         // By default step through all hours
         this.hourstep = (hourstep == null) ? 1 : hourstep;
@@ -735,8 +735,7 @@ class Calendar {
                 this.text.style.color = "red";
             }
         });
-        var condition = null
-        if (condition == null){
+        if (daily){
         this.node = $.create("div", { "class": "calendar" }, [
             $.button("-10D", () => this.prevDay(10)), ddPrev, this.text, ddNext, $.button("+10D", () => this.nextDay(10))
         ]);} else {
