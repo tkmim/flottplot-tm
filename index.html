@@ -3,14 +3,29 @@
 <head>
     <meta charset="utf-8">
     <title>flottplot</title>
-    <link rel="stylesheet" type="text/css" href="index.css">
-    <script type="text/javascript" src="flottplot.js"></script>
+    <link rel="stylesheet" type="text/css" href="./flottplot/flottplot.css">
+    <script type="text/javascript" src="./flottplot/flottplot.js"></script>
 </head>
 <body>
 <script type="text/javascript">
 
 flottplot(
-    heading("flottplot"),
+    heading("An Example UI"), // Title
+    selector("Var", { "ANA": "ANA", }),
+    hspace(),
+    cal=calendar("Date", "2021-06-01 00Z", 3, false), // name, init, hourstep, daily
+    //ft=forecast("ft", "Date", 1), // name, init (name of calender), step
+    columns(
+        column(
+		plot("./figs/ANA/{Date:yyyymmdd}/ICON-D2_{Var}_{Date:yyyymmddhh}.png")
+        ),
+        column(
+        plot("./figs/ANA/{Date:yyyymmdd:+3h}/ICON-D2_{Var}_{Date:yyyymmddhh:+3h}.png"),
+        //plot("./figs/ANA/{Date:yyyymmdd}/ICON-D2_{Var}_{ft:lead:+%02d}_{Date:yyyymmddhh:+3h}.png")
+        ),
+    ),
+    bind("ArrowLeft",cal,"prevHour", 1),
+    bind("ArrowRight",cal,"nextHour", 1),
 );
 
 </script>
