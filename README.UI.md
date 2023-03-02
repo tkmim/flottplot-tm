@@ -144,7 +144,7 @@ Navigate forecast lead times (in hours).
 `initname` must refer to an element that yields a date (e.g. a [calendar](#calendar)).
 This date is used as the initial time of the forecast.
 It is then possible to navigate the forecast in steps of `step` hours with the provided buttons.
-By default a step of 1 is used.
+By default a step of 1 hour is used.
 The element can be toggled between two modes:
 
 - Fixed lead mode (default): when the initial time changes, the valid time is adjusted so that the lead time is unchanged.
@@ -190,8 +190,8 @@ Which arguments are valid depends on the specific UI element referenced (see the
 
 E.g.: Consider a path specified as `../foo/{Date:yyyy-mm}/{Date:yyyy-mm-dd}-{Var}.png`. If `Date` refers to a calendar element set to `01-01-2020 06Z` and `Var` is a Dropdown with current value `temperature`, the path resolves to `../foo/2020-01/2020-01-01-temperature.png` after substitution.
 
-If the mouse moves over a plot with a `cursorGroup` specified, a cursor is displayed in all other plots that have the same `cursorGroup` at the same relative position.
-To obtain a vertical line instead of a pointer, the cursor group's name must end in `:vline`, to obtain a horizontal line it must end in `:hline`.
+If the mouse moves over a plot with a `cursorGroup` specified, a cursor is displayed in all other plots that belong to the same `cursorGroup` at the same relative position.
+To obtain a vertical line instead of a pointer, the cursor group's name must end in `:vline`, to obtain a horizontal line it must end in `:hline` and to obtain a crossline it must end in `:cross`.
 
 Clicking on a plot reveals an overlay that shows the plot at its native resolution or scaled to the maximum possible size that fits on the screen if the native size is larger than the available screen space.
 
