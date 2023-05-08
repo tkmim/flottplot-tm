@@ -26,6 +26,7 @@ div.fullview > div > * {
 img.plot {
     display: inline-block;
     margin: 0;
+    width: 100%;
     max-width: 100%;
 }
 div.fullview img {
@@ -84,9 +85,11 @@ hr {
     display: flex;
     flex-direction: row;
 }
+
 .columns > .column {
 
 }
+
 .expandable > .title {
     border-top: 1px solid #333333;
     background-color: #DDDDDD;

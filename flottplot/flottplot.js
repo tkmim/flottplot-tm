@@ -457,8 +457,37 @@ function container(cls, ...items) {
         node: $.create("div", { "class": cls }, nodes)
     };
 }
+
+function container2(typ, ...items) {
+//function container(type, cls='column', style='width:100%', ...items) {
+    let itet = [];
+    let cls = typ; // default class name is "column" as the original flottplot
+    let style = ""; // No specific style as default
+    
+    for (let item of items) {
+        if (item.cls != null) {
+            // when class is explicitly spcified, e.g. {"cls":"right-column"}
+            cls = item.cls;
+        } else if (item.style != null) {
+            // when style of the column is explicitly spcified, e.g. {'style':"width: 40%;"}
+            style = item.style;
+        } else {
+            // others are passed as column items
+            itet.push(item);
+        }
+    }
+    
+    let [nodes, elements] = _expandItems(itet);
+    return {
+        elements: elements,
+        node: $.create("div", { "class": cls, "style": style }, nodes)
+    };
+}
+
+
 let columns = (...cols) => container("columns", ...cols);
 let column  = (...cols) => container("column",  ...cols);
+let column2  = (...cols) => container2("column", ...cols);
 
 function vspace(height) {
     let node = $.create("div", { "class": "vspace" });
