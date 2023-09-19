@@ -1,3 +1,5 @@
+###### This repository was originally a personal fork of chpolste/flottplot. Since the version 2 of the original flottplot becomes available this repository will be no longer updated. ######
+
 # flottplot
 
 Quickly build a UI to navigate a set of plots named with a common pattern.
